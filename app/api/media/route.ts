@@ -1,12 +1,12 @@
 import { prisma } from "@/lib/prisma";
-import { getSession } from "@/lib/session";
+import { getAdmin } from "@/lib/auth";
 import { isKind } from "@/lib/media-config";
 import { mediaWhere } from "@/lib/media-server";
 
 const PER_PAGE = 24;
 
 export async function GET(req: Request) {
-  if (!(await getSession())) return Response.json({ error: "Unauthorized" }, { status: 401 });
+  if (!(await getAdmin())) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   const sp = new URL(req.url).searchParams;
   const q = sp.get("q")?.trim() || undefined;

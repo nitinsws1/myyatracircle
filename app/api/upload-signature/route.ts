@@ -1,12 +1,12 @@
 import { v2 as cloudinary } from "cloudinary";
-import { getSession } from "@/lib/session";
+import { getAdmin } from "@/lib/auth";
 
 // The browser uploads the file straight to Cloudinary.
 // This route only hands out a short-lived signature, so the API secret never leaves the server.
 const ALLOWED_FOLDERS = ["destinations", "places", "packages", "experiences", "blogs", "team", "general", "library"];
 
 export async function POST(req: Request) {
-  if (!(await getSession())) {
+  if (!(await getAdmin())) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 

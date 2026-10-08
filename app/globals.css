@@ -39,3 +39,46 @@ body {
 .rich-content hr { margin: 1.5em 0; border-color: #e2e8f0; }
 .rich-content > :first-child { margin-top: 0; }
 
+
+
+
+
+
+/* Paste at the END of app/globals.css.
+   The :root tokens are the palette from the handoff document (source of truth).
+   @theme turns them into Tailwind classes: bg-navy, text-gold, border-line, bg-ivory ... */
+:root {
+  --navy: #071a3a;
+  --navy-2: #102b55;
+  --gold: #d8b978;
+  --gold-dark: #8a6c28;
+  --gold-light: #f3d98a;
+  --ivory: #f8f5ed;
+  --white: #ffffff;
+  --ink: #202633;
+  --grey: #687080;
+  --border: #e7e1d4;
+  --footer-bg: #050f24;
+}
+
+@theme inline {
+  --color-navy: var(--navy);
+  --color-navy-2: var(--navy-2);
+  --color-gold: var(--gold);
+  --color-gold-dark: var(--gold-dark);
+  --color-gold-light: var(--gold-light);
+  --color-ivory: var(--ivory);
+  --color-ink: var(--ink);
+  --color-grey: var(--grey);
+  --color-line: var(--border);
+  --color-footer: var(--footer-bg);
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-fade-up { animation: fade-up 0.9s ease both; }
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up { animation: none; }
+}

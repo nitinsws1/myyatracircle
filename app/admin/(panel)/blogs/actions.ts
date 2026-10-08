@@ -39,6 +39,24 @@ function parse(fd: FormData) {
 
   const status = get("status") === "PUBLISHED" ? ("PUBLISHED" as const) : ("DRAFT" as const);
 
+  const authorName = get("authorName");
+  if (authorName.length > 80) errors.authorName = "Keep the author name under 80 characters";
+
+  // tags arrive as JSON text: ["Hidden gems", "Beaches"]
+  const tags: { name: string; slug: string }[] = [];
+  try {
+    const raw = JSON.parse(get("tags") || "[]");
+    if (!Array.isArray(raw) || raw.length > 10) throw new Error();
+    for (const t of raw) {
+      const name = String(t ?? "").trim().replace(/\s+/g, " ");
+      const slug = slugify(name);
+      if (!name || name.length > 30 || !slug) throw new Error();
+      if (!tags.some((x) => x.slug === slug)) tags.push({ name, slug });
+    }
+  } catch {
+    errors.tags = "Use up to 10 tags, each up to 30 characters";
+  }
+
   let publishedAt: Date | null = null;
   if (get("publishedAt")) {
     publishedAt = parseLocalDate(get("publishedAt"), Number(get("tzOffset")));
@@ -51,6 +69,7 @@ function parse(fd: FormData) {
     title,
     slug,
     categoryId,
+    authorName: orNull(authorName),
     shortDescription: orNull(get("shortDescription")),
     content,
     featuredImage: orNull(featuredImage),
@@ -61,7 +80,7 @@ function parse(fd: FormData) {
     metaDescription: orNull(get("metaDescription")),
     metaKeywords: orNull(get("metaKeywords")),
   };
-  return { errors, data };
+  return { errors, data, tags };
 }
 
 function saveError(e: unknown): FormState {
@@ -72,14 +91,31 @@ function saveError(e: unknown): FormState {
   return { message: "Something went wrong while saving. Please try again." };
 }
 
-const refresh = () => revalidatePath("/admin/blogs");
+// Finds each tag by slug, creates the missing ones, returns all the ids
+type Tx = Parameters<Parameters<typeof prisma.$transaction>[0]>[0];
+async function ensureTags(tx: Tx, tags: { name: string; slug: string }[]) {
+  const ids: number[] = [];
+  for (const t of tags) {
+    const row = await tx.tag.upsert({ where: { slug: t.slug }, update: {}, create: t });
+    ids.push(row.id);
+  }
+  return ids;
+}
+
+const refresh = () => {
+  revalidatePath("/admin/blogs");
+  revalidatePath("/admin/blogs/tags");
+};
 
 export async function createBlog(_prev: FormState, fd: FormData): Promise<FormState> {
   await requireAdmin();
-  const { errors, data } = parse(fd);
+  const { errors, data, tags } = parse(fd);
   if (Object.keys(errors).length) return { errors };
   try {
-    await prisma.blog.create({ data });
+    await prisma.$transaction(async (tx) => {
+      const ids = await ensureTags(tx, tags);
+      await tx.blog.create({ data: { ...data, tags: { connect: ids.map((id) => ({ id })) } } });
+    });
   } catch (e) {
     return saveError(e);
   }
@@ -89,10 +125,13 @@ export async function createBlog(_prev: FormState, fd: FormData): Promise<FormSt
 
 export async function updateBlog(id: number, _prev: FormState, fd: FormData): Promise<FormState> {
   await requireAdmin();
-  const { errors, data } = parse(fd);
+  const { errors, data, tags } = parse(fd);
   if (Object.keys(errors).length) return { errors };
   try {
-    await prisma.blog.update({ where: { id }, data });
+    await prisma.$transaction(async (tx) => {
+      const ids = await ensureTags(tx, tags);
+      await tx.blog.update({ where: { id }, data: { ...data, tags: { set: ids.map((tid) => ({ id: tid })) } } });
+    });
   } catch (e) {
     return saveError(e);
   }

@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { ArrowRight, BookOpen, CalendarClock, Compass, MapPin, MessageCircle, Package, Sparkles } from "lucide-react";
+import DashboardAnalytics from "@/components/admin/DashboardAnalytics";
+
 
 export default async function Dashboard() {
   const now = new Date();
@@ -23,6 +25,13 @@ export default async function Dashboard() {
     recentContactInquiries,
     recentTourInquiries,
     recentHolidayInquiries,
+    // --- Data Analytics Aggregation Queries ---
+    contactInterests,
+    holidayInterests,
+    allTourInquiries,
+    allContactInquiries,
+    allHolidayInquiries,
+
   ] = await Promise.all([
     prisma.destination.count(),
     prisma.tourPackage.count(),
@@ -54,10 +63,63 @@ export default async function Dashboard() {
       take: 6,
       select: { id: true, name: true, preferredDestination: true, status: true, createdAt: true },
     }),
+    // Fetch analytics data
+    prisma.contactInquiry.groupBy({
+      by: ["destinationOfInterest"],
+      _count: { destinationOfInterest: true },
+      where: { destinationOfInterest: { not: null } },
+      orderBy: { _count: { destinationOfInterest: "desc" } },
+      take: 5,
+    }),
+    prisma.holidayInquiry.groupBy({
+      by: ["preferredDestination"],
+      _count: { preferredDestination: true },
+      where: { preferredDestination: { not: null } },
+      orderBy: { _count: { preferredDestination: "desc" } },
+      take: 5,
+    }),
+    prisma.tourInquiry.groupBy({ by: ["status"], _count: { status: true } }),
+    prisma.contactInquiry.groupBy({ by: ["status"], _count: { status: true } }),
+    prisma.holidayInquiry.groupBy({ by: ["status"], _count: { status: true } }),
   ]);
 
   const newInquiryCount = newContactInquiries + newTourInquiries + newHolidayInquiries;
   const openInquiryCount = openContactInquiries + openTourInquiries + openHolidayInquiries;
+
+  //Analytics Computation
+  const interestCounts: Record<string, number> = {};
+  contactInterests.forEach((item) => {
+    if (item.destinationOfInterest) {
+      interestCounts[item.destinationOfInterest] = (interestCounts[item.destinationOfInterest] || 0) + item._count.destinationOfInterest;
+    }
+  });
+  holidayInterests.forEach((item) => {
+    if (item.preferredDestination) {
+      interestCounts[item.preferredDestination] = (interestCounts[item.preferredDestination] || 0) + item._count.preferredDestination;
+    }
+  });
+
+  const topInterests = Object.entries(interestCounts)
+    .map(([label, count]) => ({ label, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5);
+
+  const statusTotals = { NEW: 0, IN_PROGRESS: 0, CLOSED: 0 };
+  [...allTourInquiries, ...allContactInquiries, ...allHolidayInquiries].forEach((st) => {
+    if (st.status in statusTotals) {
+      statusTotals[st.status as keyof typeof statusTotals] += st._count.status;
+    }
+  });
+
+  const grandTotalInquiries = statusTotals.NEW + statusTotals.IN_PROGRESS + statusTotals.CLOSED;
+  const conversionRate = grandTotalInquiries ? Math.round((statusTotals.CLOSED / grandTotalInquiries) * 100) : 0;
+
+  const statusBreakdown = [
+    { status: "NEW", count: statusTotals.NEW },
+    { status: "IN_PROGRESS", count: statusTotals.IN_PROGRESS },
+    { status: "CLOSED", count: statusTotals.CLOSED },
+  ];
+
   const recentInquiries = [
     ...recentContactInquiries.map((inquiry) => ({
       ...inquiry,
@@ -162,6 +224,15 @@ export default async function Dashboard() {
         </div>
       </section>
 
+      <section aria-label="User Analytics & Insights">
+        <DashboardAnalytics
+          topInterests={topInterests}
+          statusBreakdown={statusBreakdown}
+          totalInquiries={grandTotalInquiries}
+          conversionRate={conversionRate}
+        />
+      </section>
+      
       <section aria-label="Blog publishing status">
         <Link
           href="/admin/blogs"
