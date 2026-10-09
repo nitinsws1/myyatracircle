@@ -19,15 +19,15 @@
   }
 } */
 
-body {
+/* body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-}
+} */
 
 
 /*    Used by the admin editor now, and by the public website later (wrap the saved HTML in className="rich-content"). */
-.rich-content h2 { font-size: 1.5rem; font-weight: 700; margin: 1.25em 0 0.5em; }
+/* .rich-content h2 { font-size: 1.5rem; font-weight: 700; margin: 1.25em 0 0.5em; }
 .rich-content h3 { font-size: 1.25rem; font-weight: 600; margin: 1.1em 0 0.4em; }
 .rich-content h4 { font-size: 1.1rem; font-weight: 600; margin: 1em 0 0.4em; }
 .rich-content p { margin: 0.75em 0; line-height: 1.7; }
@@ -37,5 +37,39 @@ body {
 .rich-content blockquote { border-left: 3px solid #0f766e; padding-left: 1rem; color: #475569; margin: 1em 0; }
 .rich-content a { color: #0f766e; text-decoration: underline; }
 .rich-content hr { margin: 1.5em 0; border-color: #e2e8f0; }
-.rich-content > :first-child { margin-top: 0; }
+.rich-content > :first-child { margin-top: 0; } */
 
+
+
+
+
+
+/* Paste at the END of app/globals.css.
+   The :root tokens are the palette from the handoff document (source of truth).
+   @theme turns them into Tailwind classes: bg-navy, text-gold, border-line, bg-ivory ... */
+:root {
+  --navy: #01040a;
+  --navy-2: #000308;
+  --gold: #d8b978;
+  --gold-dark: #8a6c28;
+  --gold-light: #f3d98a;
+  --ivory: #f8f5ed;
+  --white: #ffffff;
+  --ink: #202633;
+  --grey: #687080;
+  --border: #e7e1d4;
+  --footer-bg: #050f24;
+}
+/* 
+@theme inline {
+  --color-navy: var(--navy);
+  --color-navy-2: var(--navy-2);
+  --color-gold: var(--gold);
+  --color-gold-dark: var(--gold-dark);
+  --color-gold-light: var(--gold-light);
+  --color-ivory: var(--ivory);
+  --color-ink: var(--ink);
+  --color-grey: var(--grey);
+  --color-line: var(--border);
+  --color-footer: var(--footer-bg);
+} */

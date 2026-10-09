@@ -1,0 +1,54 @@
+.tileLink {
+  flex: 1;
+  min-height: 0;
+  display: block;
+}
+.tile {
+  width: 100%;
+  height: 100%;
+  min-height: 160px;
+  position: relative;
+}
+.scrim {
+  z-index: 1;
+  background: linear-gradient(#0000 55%, #00000080);
+  position: absolute;
+  inset: 0;
+}
+.caption {
+  z-index: 3;
+  position: absolute;
+  bottom: 28px;
+  left: 36px;
+}
+.name {
+  font-family: var(--font-display);
+  color: var(--white);
+  font-size: 20px;
+  font-weight: 600;
+}
+.tag {
+  font-family: var(--font-body);
+  color: #ffffffde;
+  margin-top: 4px;
+  font-size: 13px;
+}
+.captionCompact {
+  bottom: 18px;
+  left: 22px;
+}
+.nameCompact {
+  font-size: 16px;
+  font-weight: 500;
+}
+@media (max-width: 767px) {
+  .caption {
+    bottom: 18px;
+    left: 22px;
+  }
+}
+@media (max-width: 767px) {
+  .name {
+    font-size: 17px;
+  }
+}

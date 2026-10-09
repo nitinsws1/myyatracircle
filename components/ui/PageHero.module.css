@@ -1,0 +1,41 @@
+.hero {
+  background: var(--navy);
+  padding: 200px 0 80px;
+}
+.eyebrow {
+  font-family: var(--font-body);
+  letter-spacing: 2.6px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 18px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.title {
+  font-family: var(--font-display);
+  letter-spacing: -0.4px;
+  color: var(--white);
+  max-width: 720px;
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1.16;
+}
+.desc {
+  font-family: var(--font-body);
+  color: #ffffffc7;
+  max-width: 640px;
+  margin-top: 18px;
+  font-size: 16.5px;
+  font-weight: 300;
+  line-height: 1.8;
+}
+@media (max-width: 767px) {
+  .hero {
+    padding: 150px 0 56px;
+  }
+}
+@media (max-width: 767px) {
+  .title {
+    font-size: 30px;
+  }
+}

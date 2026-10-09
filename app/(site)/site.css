@@ -1,0 +1,184 @@
+/* Public website styles (your original globals.css).
+   Everything that targets plain tags (a, button, ul, h1...) is scoped to .site-root, so the admin
+   panel is never affected. :where() keeps the specificity at zero, so your CSS Modules win exactly
+   as they did in the old project. */
+
+:root {
+  --navy: #071a3a;
+  --navy-2: #102b55;
+  --gold: #d8b978;
+  --gold-dark: #8a6c28;
+  --gold-light: #f3d98a;
+  --ivory: #f8f5ed;
+  --white: #fff;
+  --ink: #202633;
+  --grey: #687080;
+  --border: #e7e1d4;
+  --footer-bg: #050f24;
+
+  --container-max: 1760px;
+  --gutter-desktop: 80px;
+  --gutter-tablet: 48px;
+  --gutter-mobile: 24px;
+
+  --section-pad-desktop: 160px;
+  --section-pad-tablet: 100px;
+  --section-pad-mobile: 72px;
+
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* The wrapper div in app/(site)/layout.tsx. It replaces the old <html>/<body> rules.
+   --font-poppins is created by next/font on this same element, so the font tokens live here. */
+:where(.site-root) {
+  --font-display: var(--font-poppins), "Helvetica Neue", Arial, sans-serif;
+  --font-body: var(--font-poppins), "Helvetica Neue", Arial, sans-serif;
+
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--ivory);
+  min-height: 100vh;
+  max-width: 100vw;
+  overflow-x: clip; /* stops sideways scrolling without breaking sticky headers */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* smooth anchor scrolling only while a public page is on screen */
+:root:has(.site-root) {
+  scroll-behavior: smooth;
+}
+
+:where(.site-root) * {
+  box-sizing: border-box;
+}
+
+:where(.site-root) img,
+:where(.site-root) picture {
+  max-width: 100%;
+  display: block;
+}
+
+:where(.site-root) a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:where(.site-root) button {
+  cursor: pointer;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+}
+
+:where(.site-root) ul,
+:where(.site-root) ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:where(.site-root) h1,
+:where(.site-root) h2,
+:where(.site-root) h3,
+:where(.site-root) h4,
+:where(.site-root) h5,
+:where(.site-root) h6,
+:where(.site-root) p {
+  margin: 0;
+}
+
+/* Skip-to-content link: hidden until focused, first focusable element for keyboard users. */
+.skip-link {
+  position: absolute;
+  top: -60px;
+  left: 16px;
+  z-index: 1000;
+  background: var(--navy);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 20px;
+  border-radius: 0 0 6px 6px;
+  transition: top 0.2s;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+:where(.site-root) a:focus-visible,
+:where(.site-root) button:focus-visible,
+:where(.site-root) input:focus-visible,
+:where(.site-root) [tabindex]:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:has(.site-root) {
+    scroll-behavior: auto;
+  }
+  :where(.site-root) *,
+  :where(.site-root) *::before,
+  :where(.site-root) *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* Shared photo-hover treatment: a scrim that lifts and an image that scales slightly,
+   used by several card components (destinations, journeys, journal, "beyond the itinerary"). */
+.photo-hover-img {
+  transition: transform 0.35s var(--ease-editorial);
+}
+.photo-hover:hover .photo-hover-img,
+.photo-hover:focus-visible .photo-hover-img {
+  transform: scale(1.045);
+}
+.photo-hover-scrim {
+  transition: opacity 0.35s var(--ease-editorial);
+}
+.photo-hover:hover .photo-hover-scrim,
+.photo-hover:focus-visible .photo-hover-scrim {
+  opacity: 0.85;
+}
+
+/* Shared "cta-arrow" nudge used on text links/buttons across the site. */
+.cta-arrow {
+  display: inline-block;
+  margin-left: 7px;
+  transition: transform 0.2s var(--ease-editorial);
+}
+a:hover .cta-arrow,
+a:focus-visible .cta-arrow,
+button:hover .cta-arrow,
+button:focus-visible .cta-arrow {
+  transform: translateX(3px);
+}
+
+@keyframes ringBreathe {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}

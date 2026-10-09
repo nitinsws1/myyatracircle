@@ -6,6 +6,7 @@ import type { Blog } from "@/app/generated/prisma/client";
 import type { FormState } from "@/lib/form-state";
 import ImageUpload from "@/components/admin/ImageUpload";
 import RichTextEditor from "@/components/admin/RichTextEditor";
+import TagPicker from "@/components/admin/TagPicker";
 
 const input =
   "mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100";
@@ -37,9 +38,12 @@ function Card({ title, children }: { title?: string; children: React.ReactNode }
   );
 }
 
-export default function BlogForm({ action, categories, initial }: {
+export default function BlogForm({ action, categories, authors, tagOptions, initialTags, initial }: {
   action: (prev: FormState, fd: FormData) => Promise<FormState>;
   categories: { id: number; name: string }[];
+  authors: string[]; // names used on earlier posts
+  tagOptions: string[]; // every existing tag
+  initialTags: string[]; // tags of this post
   initial?: Blog;
 }) {
   const [state, formAction, pending] = useActionState(action, undefined);
@@ -73,6 +77,11 @@ export default function BlogForm({ action, categories, initial }: {
           <Field label="Short description" hint="Shown on blog cards and as the intro in listings.">
             <textarea name="shortDescription" rows={2} defaultValue={initial?.shortDescription ?? ""} className={input} />
           </Field>
+          <Field label="Author" error={e.authorName} hint="Shown on the post. Pick a name used before or type a new one.">
+            <input name="authorName" list="blog-authors" defaultValue={initial?.authorName ?? ""} className={input} placeholder="Aarav Nair" />
+            <datalist id="blog-authors">{authors.map((a) => <option key={a} value={a} />)}</datalist>
+          </Field>
+          <TagPicker name="tags" options={tagOptions} initial={initialTags} error={e.tags} />
           <div>
             <RichTextEditor name="content" label="Content *" defaultValue={initial?.content} />
             {e.content && <p className="mt-1 text-xs text-red-600">{e.content}</p>}

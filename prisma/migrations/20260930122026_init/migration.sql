@@ -32,7 +32,7 @@ CREATE TABLE "SiteSetting" (
 -- CreateTable
 CREATE TABLE "SocialLink" (
     "id" SERIAL NOT NULL,
-    "platform" TEXT NOT NULL,
+    "platform" TEXT NOT NULL ,
     "url" TEXT NOT NULL,
     "sortOrder" INTEGER NOT NULL DEFAULT 0,
     "isActive" BOOLEAN NOT NULL DEFAULT true,

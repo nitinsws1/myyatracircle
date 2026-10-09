@@ -1,10 +1,10 @@
-import { getSession } from "@/lib/session";
+import { getAdmin } from "@/lib/auth";
 import { exportData } from "@/lib/inquiries";
 import { isType } from "@/lib/inquiry-config";
 
 // A route handler is not covered by the admin layout, so it checks the login itself.
 export async function GET(req: Request) {
-  if (!(await getSession())) return new Response("Unauthorized", { status: 401 });
+  if (!(await getAdmin())) return new Response("Unauthorized", { status: 401 });
 
   const sp = new URL(req.url).searchParams;
   const type = sp.get("type") ?? "";

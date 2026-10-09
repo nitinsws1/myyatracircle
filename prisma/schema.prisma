@@ -46,6 +46,7 @@ model AdminUser {
   passwordHash String
   isActive     Boolean   @default(true)
   lastLoginAt  DateTime?
+  passwordChangedAt DateTime? // sessions created before this moment stop working
   createdAt    DateTime  @default(now())
 }
 
@@ -318,6 +319,7 @@ model Blog {
   categoryId       Int?
   title            String
   slug             String        @unique
+  authorName       String?
   shortDescription String?
   content          String
   featuredImage    String?
@@ -330,6 +332,14 @@ model Blog {
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
   category         BlogCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  tags             Tag[]
+}
+
+model Tag {
+  id    Int    @id @default(autoincrement())
+  name  String
+  slug  String @unique
+  blogs Blog[]
 }
 
 model Faq {
