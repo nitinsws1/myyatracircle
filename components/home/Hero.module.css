@@ -1,0 +1,126 @@
+.hero {
+  isolation: isolate;
+  width: 100%;
+  height: 860px;
+  position: relative;
+  overflow: hidden;
+}
+.image {
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+}
+.scrim {
+  z-index: 1;
+  background:
+    linear-gradient(#040a1699 0, #040a1600 170px),
+    linear-gradient(
+      100deg,
+      #060d1ceb 0%,
+      #060d1ca8 40%,
+      #060d1c33 66%,
+      #060d1c75 100%
+    );
+  position: absolute;
+  inset: 0;
+}
+.content {
+  z-index: 4;
+  max-width: 760px;
+  position: absolute;
+  top: 308px;
+  left: 80px;
+}
+.eyebrow {
+  font-family: var(--font-body);
+  letter-spacing: 2.6px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 22px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.headline {
+  font-family: var(--font-display);
+  letter-spacing: -1px;
+  color: var(--white);
+  max-width: 700px;
+  font-size: 72px;
+  font-weight: 700;
+  line-height: 1.05;
+}
+.subhead {
+  font-family: var(--font-body);
+  color: #ffffffd9;
+  max-width: 520px;
+  margin-top: 26px;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.7;
+}
+.ctas {
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 42px;
+  display: flex;
+}
+@media (max-width: 1279px) {
+  .hero {
+    height: 760px;
+  }
+}
+@media (max-width: 1279px) {
+  .image {
+    object-position: 75% center;
+  }
+}
+@media (max-width: 1279px) {
+  .content {
+    left: var(--gutter-tablet);
+    max-width: 620px;
+    top: 260px;
+  }
+}
+@media (max-width: 1279px) {
+  .headline {
+    font-size: 56px;
+  }
+}
+@media (max-width: 767px) {
+  .hero {
+    height: 100svh;
+    min-height: 620px;
+  }
+}
+@media (max-width: 767px) {
+  .image {
+    object-position: 65% center;
+  }
+}
+@media (max-width: 767px) {
+  .content {
+    left: var(--gutter-mobile);
+    right: var(--gutter-mobile);
+    max-width: 100%;
+    top: auto;
+    bottom: 140px;
+  }
+}
+@media (max-width: 767px) {
+  .headline {
+    font-size: 38px;
+  }
+}
+@media (max-width: 767px) {
+  .subhead {
+    max-width: 100%;
+    font-size: 15.5px;
+  }
+}
+@media (max-width: 767px) {
+  .ctas {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 30px;
+  }
+}

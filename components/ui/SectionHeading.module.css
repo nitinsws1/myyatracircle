@@ -1,0 +1,40 @@
+.heading {
+  font-family: var(--font-display);
+  letter-spacing: -0.4px;
+  max-width: 620px;
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1.16;
+}
+.md {
+  max-width: 460px;
+  font-size: 36px;
+}
+.navy {
+  color: var(--navy);
+}
+.white {
+  color: var(--white);
+}
+@media (max-width: 1279px) {
+  .heading {
+    max-width: 520px;
+    font-size: 38px;
+  }
+}
+@media (max-width: 1279px) {
+  .md {
+    font-size: 30px;
+  }
+}
+@media (max-width: 767px) {
+  .heading {
+    max-width: 100%;
+    font-size: 30px;
+  }
+}
+@media (max-width: 767px) {
+  .md {
+    font-size: 24px;
+  }
+}

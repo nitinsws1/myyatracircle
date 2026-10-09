@@ -1,0 +1,234 @@
+.footer {
+  background: var(--footer-bg);
+  padding: 72px 80px 40px;
+}
+.brandLine {
+  max-width: 1440px;
+  font-family: var(--font-body);
+  letter-spacing: 0.3px;
+  color: #ffffff80;
+  margin: 0 auto;
+  padding-bottom: 28px;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+.top {
+  border-bottom: 1px solid #ffffff1a;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 52px 0 48px;
+}
+.linkGrid {
+  grid-template-columns: 1fr 1fr 0.9fr 0.9fr minmax(280px, 1.4fr);
+  align-items: start;
+  gap: 40px clamp(40px, 4vw, 56px);
+  width: 100%;
+  display: grid;
+}
+.groupHeading {
+  font-family: var(--font-body);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: #d8b978bf;
+  margin-bottom: 16px;
+  font-size: 10.5px;
+  font-weight: 600;
+}
+.groupLinks {
+  flex-direction: column;
+  gap: 10px;
+  display: flex;
+}
+.groupLink {
+  font-family: var(--font-body);
+  color: #ffffff9e;
+  font-size: 13px;
+  font-weight: 300;
+}
+.groupLink:hover {
+  color: var(--gold-light);
+}
+.contactCol {
+  justify-self: end;
+  width: 100%;
+  max-width: 320px;
+}
+.contactInfo {
+  font-family: var(--font-body);
+  color: #ffffff9e;
+  flex-direction: column;
+  gap: 11px;
+  width: 100%;
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.7;
+  display: flex;
+}
+.contactInfo a {
+  color: inherit;
+  transition: color 0.15s;
+}
+.contactInfo a:hover {
+  color: var(--gold-light);
+}
+.bottom {
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-top: 28px;
+  display: flex;
+}
+.copyright {
+  font-family: var(--font-body);
+  color: #ffffff9e;
+  font-size: 12px;
+}
+.legal {
+  gap: 28px;
+  display: flex;
+}
+.legal a {
+  font-family: var(--font-body);
+  color: #ffffff9e;
+  font-size: 12px;
+}
+.legal a:hover {
+  color: var(--gold-light);
+}
+
+/* Groups the legal text with the agency credit badge so both sit on the
+   footer's right edge together, without disturbing .bottom's existing
+   space-between/copyright layout. */
+.bottomRight {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+/* Agency credit — a small rounded "card" pill, quiet at rest and lifting
+   on hover/focus so it reads as a considered signature rather than dead
+   fine print. Uses the same --ease-editorial timing as the rest of the
+   site's hover motion. */
+.creditBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 6px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  text-decoration: none;
+  transition:
+    background-color 0.3s var(--ease-editorial),
+    border-color 0.3s var(--ease-editorial),
+    transform 0.3s var(--ease-editorial),
+    box-shadow 0.3s var(--ease-editorial);
+}
+.creditBadge:hover,
+.creditBadge:focus-visible {
+  background: rgba(216, 185, 120, 0.12);
+  border-color: rgba(216, 185, 120, 0.45);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+}
+.creditBadge:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.creditIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+  color: var(--navy);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.creditText {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.62);
+  white-space: nowrap;
+  transition: color 0.3s var(--ease-editorial);
+}
+.creditBadge:hover .creditText,
+.creditBadge:focus-visible .creditText {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.creditHighlight {
+  color: var(--gold-light);
+  font-weight: 600;
+}
+
+@media (max-width: 1279px) {
+  .footer {
+    padding: 64px var(--gutter-tablet) 32px;
+  }
+}
+@media (max-width: 1279px) {
+  .linkGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px 48px;
+  }
+}
+@media (max-width: 1023px) {
+  .linkGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 36px 40px;
+  }
+}
+@media (max-width: 1023px) {
+  .contactCol {
+    grid-column: 1/-1;
+    justify-self: start;
+    max-width: 420px;
+  }
+}
+@media (max-width: 767px) {
+  .footer {
+    padding: 52px var(--gutter-mobile) 28px;
+  }
+}
+@media (max-width: 767px) {
+  .brandLine {
+    padding-bottom: 20px;
+    font-size: 12px;
+  }
+}
+@media (max-width: 767px) {
+  .linkGrid {
+    gap: 32px 24px;
+  }
+}
+@media (max-width: 767px) {
+  .contactCol {
+    max-width: 100%;
+  }
+}
+@media (max-width: 767px) {
+  .bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .bottomRight {
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .creditText {
+    white-space: normal;
+  }
+}

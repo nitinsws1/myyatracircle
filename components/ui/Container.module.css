@@ -1,0 +1,29 @@
+.container {
+  width: 100%;
+  max-width: 1920px;
+  padding-left: var(--gutter-desktop);
+  padding-right: var(--gutter-desktop);
+  margin: 0 auto;
+}
+.bleed {
+  padding-left: 0;
+  padding-right: 0;
+}
+.editorial {
+  max-width: 1280px;
+}
+.wide {
+  max-width: 1440px;
+}
+@media (max-width: 1279px) {
+  .container {
+    padding-left: var(--gutter-tablet);
+    padding-right: var(--gutter-tablet);
+  }
+}
+@media (max-width: 767px) {
+  .container {
+    padding-left: var(--gutter-mobile);
+    padding-right: var(--gutter-mobile);
+  }
+}

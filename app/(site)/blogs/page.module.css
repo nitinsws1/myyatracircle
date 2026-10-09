@@ -1,0 +1,23 @@
+.section {
+  padding: 80px 0 var(--section-pad-desktop);
+  background: var(--white);
+}
+.grid {
+  flex-wrap: wrap;
+  gap: 32px 24px;
+  display: flex;
+}
+.grid > * {
+  flex: calc(25% - 18px);
+  min-width: 260px;
+}
+@media (max-width: 1023px) {
+  .grid > * {
+    flex: calc(50% - 12px);
+  }
+}
+@media (max-width: 600px) {
+  .grid > * {
+    flex: 100%;
+  }
+}

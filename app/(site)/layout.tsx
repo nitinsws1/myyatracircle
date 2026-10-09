@@ -1,72 +1,56 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { Poppins } from "next/font/google";
-import { getActivePages, getNav, getSiteSettings } from "@/lib/site-data";
-import SiteHeader, { type NavItem } from "@/components/site/SiteHeader";
-import SiteFooter from "@/components/site/SiteFooter";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import { getSettings } from "@/lib/settings";
+import "./site.css";
 
-// One font family for headings and body text, as in the palette handoff
 const poppins = Poppins({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext", "devanagari"],
   weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-poppins",
   display: "swap",
-  fallback: ["Helvetica Neue", "Arial", "sans-serif"],
 });
 
+// Used only until the admin fills in Settings > Default SEO
+const FALLBACK_TITLE = "My Yatra Circle | Bespoke Journeys Across India and Beyond";
+const FALLBACK_DESCRIPTION =
+  "My Yatra Circle plans bespoke travel across India and beyond — curated itineraries, trusted local partners, and concierge support from the first conversation to the journey home.";
+
+// Title, description and favicon now come from Settings instead of being fixed in the code
 export async function generateMetadata(): Promise<Metadata> {
-  const s = await getSiteSettings();
+  const s = await getSettings();
   const name = s.siteName || "My Yatra Circle";
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
-    title: { default: s.siteMetaTitle || name, template: `%s | ${name}` },
-    description: s.siteMetaDescription || s.tagline || undefined,
+    title: { default: s.siteMetaTitle || FALLBACK_TITLE, template: `%s | ${name}` },
+    description: s.siteMetaDescription || FALLBACK_DESCRIPTION,
     icons: s.favicon ? { icon: s.favicon } : undefined,
     openGraph: { siteName: name, type: "website" },
   };
 }
 
+// The <html> and <body> tags stay in the backend's own app/layout.tsx.
+// This wrapper gives public pages the font, the header and the footer, and nothing else.
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  const [s, nav, pages] = await Promise.all([getSiteSettings(), getNav(), getActivePages()]);
-  const aboutOn = pages.has("about-us");
-
-  const items: NavItem[] = [
-    {
-      label: "Destinations", href: "/destinations",
-      children: nav.destinations.length
-        ? [...nav.destinations.map((d) => ({ label: d.name, href: `/destinations/${d.slug}` })), { label: "View all destinations", href: "/destinations" }]
-        : undefined,
-    },
-    {
-      label: "Journeys", href: "/packages",
-      children: nav.packages.length
-        ? [...nav.packages.map((p) => ({ label: p.name, href: `/packages/${p.slug}` })), { label: "View all journeys", href: "/packages" }]
-        : undefined,
-    },
-    { label: "Experiences", href: "/experiences" },
-    { label: "Inspiration", href: "/blogs" },
-    {
-      label: "About", href: aboutOn ? "/about-us" : "/contact-us",
-      children: [
-        ...(aboutOn ? [{ label: "Our story", href: "/about-us" }] : []),
-        { label: "Traveller stories", href: "/testimonials" },
-        { label: "FAQs", href: "/faqs" },
-        { label: "Contact", href: "/contact-us" },
-      ],
-    },
-  ];
+  const { gaId } = await getSettings();
 
   return (
-    <div className={`${poppins.className} min-h-screen bg-ivory text-ink antialiased`}>
-      <SiteHeader siteName={s.siteName || "My Yatra Circle"} logo={s.logo} items={items} />
-      <main>{children}</main>
-      <SiteFooter />
+    <div className={`${poppins.variable} site-root`}>
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
+      <Header />
+      {children}
+      <Footer />
 
-      {/* Google Analytics: only the validated Measurement ID is ever used here */}
-      {s.gaId && (
+      {/* Google Analytics: only the validated Measurement ID from Settings is ever used */}
+      {gaId && (
         <>
-          <Script src={`https://www.googletagmanager.com/gtag/js?id=${s.gaId}`} strategy="afterInteractive" />
+          <Script src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} strategy="afterInteractive" />
           <Script id="ga-init" strategy="afterInteractive">
-            {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${s.gaId}');`}
+            {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaId}');`}
           </Script>
         </>
       )}

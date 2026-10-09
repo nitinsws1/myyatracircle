@@ -1,0 +1,13 @@
+.ring {
+  pointer-events: none;
+  z-index: 1;
+  border: 1px solid #ffffff42;
+  border-radius: 50%;
+  animation: 9s ease-in-out infinite ringBreathe;
+  position: absolute;
+}
+@media (max-width: 767px) {
+  .ring {
+    display: none;
+  }
+}

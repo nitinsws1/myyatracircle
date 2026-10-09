@@ -86,7 +86,7 @@ export default function Sidebar({ adminName, logoUrl }: SidebarProps) {
           <span className="text-[10px] md:text-xs text-[#d8b978] font-sans font-medium tracking-[0.25em] uppercase block mt-1 text-center">MY YATRA CIRCLE</span>
         </div>
 
-        <nav className="flex-1 space-y-1 overflow-y-auto px-3 ">
+        <nav className="flex-1 space-y-1 overflow-y-auto px-3 overflow-auto scrollbar-none ">
           {nav.map(({ label, href, icon: Icon }) => {
             const active = isTabActive(href, label);
             return (

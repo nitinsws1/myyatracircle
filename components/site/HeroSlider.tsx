@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { youtubeId } from "@/lib/content-config";
 import { Btn } from "@/components/site/ui";
+import { Button } from "@/components/ui/Button";
+import homeStyles from "@/components/home/Hero.module.css";
 
 export type Slide = {
   id: number; mediaUrl: string; mediaType: string;
@@ -27,7 +29,17 @@ function SlideMedia({ slide, index, current }: { slide: Slide; index: number; cu
   return <Image src={slide.mediaUrl} alt="" fill priority={index === 0} sizes="100vw" className="object-cover" />;
 }
 
-export default function HeroSlider({ slides, eyebrow, fallbackTitle }: { slides: Slide[]; eyebrow: string; fallbackTitle: string }) {
+export default function HeroSlider({
+  slides,
+  eyebrow,
+  fallbackTitle,
+  homeStyle = false,
+}: {
+  slides: Slide[];
+  eyebrow: string;
+  fallbackTitle: string;
+  homeStyle?: boolean;
+}) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const [reduced, setReduced] = useState(false);
@@ -61,8 +73,14 @@ export default function HeroSlider({ slides, eyebrow, fallbackTitle }: { slides:
       )}
 
       {/* dark overlays keep the white text readable */}
-      <div className="absolute inset-0 bg-gradient-to-r from-navy/80 via-navy/35 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-navy/70 via-transparent to-navy/40" />
+      {homeStyle ? (
+        <div aria-hidden="true" className={`absolute inset-0 ${homeStyles.scrim}`} />
+      ) : (
+        <>
+          <div className="absolute inset-0 bg-gradient-to-r from-navy/80 via-navy/35 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-navy/70 via-transparent to-navy/40" />
+        </>
+      )}
 
       {hasText && (
         <div key={active} className="relative z-10 mx-auto w-full max-w-[1200px] px-6 pb-24 pt-40 md:px-10 md:pb-32 xl:px-0 animate-fade-up">
@@ -70,8 +88,17 @@ export default function HeroSlider({ slides, eyebrow, fallbackTitle }: { slides:
           {heading && <h1 className="max-w-3xl text-[2.75rem] font-bold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl">{heading}</h1>}
           {cur?.subHeading && <p className="mt-6 max-w-xl text-lg font-light leading-relaxed text-white/90 md:text-xl">{cur.subHeading}</p>}
           <div className="mt-9 flex flex-wrap gap-4">
-            <Btn href={primary.href} variant="gold">{primary.text}</Btn>
-            <Btn href="/destinations" variant="outline">Explore destinations</Btn>
+            {homeStyle ? (
+              <>
+                <Button href={primary.href} variant="primary">{primary.text}</Button>
+                <Button href="/destinations" variant="secondary">Explore Destinations</Button>
+              </>
+            ) : (
+              <>
+                <Btn href={primary.href} variant="gold">{primary.text}</Btn>
+                <Btn href="/destinations" variant="outline">Explore destinations</Btn>
+              </>
+            )}
           </div>
         </div>
       )}
