@@ -30,7 +30,10 @@ type HeaderClientProps = {
   siteName: string;
 };
 
-
+const ABOUT_LINKS = [
+  { label: "Our Story", href: "/about" },
+  { label: "Contact", href: "/contact" },
+];
 
 type DropdownKey = "destinations" | "packages" | "about" | null;
 
