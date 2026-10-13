@@ -1,0 +1,159 @@
+.wrapper {
+  width: 100%;
+}
+
+.form {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  position: relative;
+}
+
+.inputGroup {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.input {
+  width: 100%;
+  border-radius: 2px;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 300;
+  transition: all 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+}
+
+/* Variant: Dark (for Footer) */
+.dark .input {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff;
+  padding: 11px 16px;
+}
+
+.dark .input:focus {
+  border-color: var(--gold-light);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 2px rgba(216, 185, 120, 0.25);
+}
+
+.dark .input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.dark .submitBtn {
+  background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+  color: var(--navy);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 11px 20px;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.dark .submitBtn:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.dark .submitBtn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* Variant: Editorial (for Home/Blog) */
+.editorial .input {
+  background: #fff;
+  border: 1px solid #d8d4cb;
+  color: var(--ink);
+  padding: 13px 16px;
+}
+
+.editorial .input:focus {
+  border-color: var(--gold-dark);
+  box-shadow: 0 0 0 3px rgba(184, 153, 90, 0.15);
+}
+
+.editorial .input::placeholder {
+  color: #9298a2;
+}
+
+.editorial .submitBtn {
+  background: var(--navy);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 13px 22px;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s ease;
+}
+
+.editorial .submitBtn:hover:not(:disabled) {
+  background: var(--gold-dark);
+}
+
+.editorial .submitBtn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.inputError {
+  border-color: #e45b5b !important;
+}
+
+.statusMessage {
+  margin-top: 10px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  transition: all 0.2s ease;
+}
+
+.statusSuccess {
+  color: #5edb93;
+}
+
+.statusError {
+  color: #ff8585;
+}
+
+.editorial .statusSuccess {
+  color: #1b6336;
+  font-weight: 500;
+}
+
+.editorial .statusError {
+  color: #a83232;
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .form {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .submitBtn {
+    justify-content: center;
+    width: 100%;
+  }
+}

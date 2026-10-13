@@ -48,7 +48,7 @@ export default function AboutSection() {
               ))}
             </ol>
             <div className={styles.ctaRow}>
-              <Button href="/#journey-finder">Plan Your Journey</Button>
+              <Button href="/custom-holidays">Custom Holiday</Button>
               <Button href="/about" variant="tertiary" className={styles.storyLink}>
                 Read Our Story
               </Button>

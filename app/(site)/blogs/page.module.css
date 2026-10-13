@@ -1,23 +1,136 @@
 .section {
-  padding: 80px 0 var(--section-pad-desktop);
-  background: var(--white);
+  padding: 88px 0 var(--section-pad-desktop);
+  background:
+    radial-gradient(ellipse at 50% 0, rgba(216, 185, 120, 0.1), transparent 48%),
+    var(--ivory);
+}
+
+.intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 38px;
+}
+.introCopy {
+  max-width: 660px;
+}
+.introEyebrow {
+  margin: 0 0 10px;
+  color: var(--gold-dark);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.introTitle {
+  color: var(--navy);
+  font-family: var(--font-display);
+  font-size: clamp(27px, 3vw, 38px);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+}
+.introText {
+  max-width: 560px;
+  margin-top: 12px;
+  color: var(--grey);
+  font-size: 14px;
+  line-height: 1.8;
+}
+.count {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 14px;
+  border-left: 1px solid var(--border);
+  padding: 8px 0 8px 24px;
+}
+.countNumber {
+  color: var(--navy);
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 500;
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+.countLabel {
+  color: var(--grey);
+  font-size: 12px;
+  line-height: 1.5;
 }
 .grid {
-  flex-wrap: wrap;
-  gap: 32px 24px;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 30px 24px;
 }
-.grid > * {
-  flex: calc(25% - 18px);
-  min-width: 260px;
+.empty {
+  text-align: center;
+  padding: 76px 24px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--grey);
 }
+.emptyTitle {
+  margin: 0 0 8px;
+  color: var(--navy);
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 600;
+}
+.emptyText {
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.7;
+}
+
 @media (max-width: 1023px) {
-  .grid > * {
-    flex: calc(50% - 12px);
+  .section {
+    padding-top: 68px;
+  }
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px 20px;
   }
 }
 @media (max-width: 600px) {
-  .grid > * {
-    flex: 100%;
+  .section {
+    padding-top: 52px;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .intro {
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 26px;
+  }
+  .introEyebrow {
+    font-size: 10px;
+  }
+  .introTitle {
+    font-size: 28px;
+  }
+  .introText {
+    font-size: 13px;
+  }
+  .count {
+    gap: 8px;
+    padding-left: 14px;
+  }
+  .countNumber {
+    font-size: 32px;
+  }
+  .countLabel {
+    font-size: 10px;
+  }
+  .empty {
+    padding: 56px 20px;
+  }
+  .emptyTitle {
+    font-size: 21px;
   }
 }

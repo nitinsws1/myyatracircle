@@ -5,7 +5,7 @@ import Hero from "@/components/home/Hero";
 import DestinationGrid from "@/components/home/DestinationGrid";
 import FeaturedPackages from "@/components/home/FeaturedPackages";
 import BeyondItinerary from "@/components/home/BeyondItinerary";
-import WhyMYC from "@/components/home/WhyMYC";
+// import WhyMYC from "@/components/home/WhyMYC";
 import FeaturedBlogs from "@/components/home/FeaturedBlogs";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 
@@ -22,7 +22,7 @@ const SECTIONS: Record<string, (s: Section) => ReactNode> = {
   ),
   featuredPackages: (s) => <FeaturedPackages heading={s.title} subheading={s.subtitle} />,
   experiences: (s) => <BeyondItinerary heading={s.title} subheading={s.subtitle} />,
-  whyUs: (s) => <WhyMYC heading={s.title} subheading={s.subtitle} />,
+  // whyUs: (s) => <WhyMYC heading={s.title} subheading={s.subtitle} />,
   testimonials: (s) => <TestimonialsSection heading={s.title} subheading={s.subtitle} />,
   blogs: (s) => <FeaturedBlogs heading={s.title} subheading={s.subtitle} />,
 };

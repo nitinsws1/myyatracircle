@@ -28,6 +28,8 @@
   --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+
+
 /* The wrapper div in app/(site)/layout.tsx. It replaces the old <html>/<body> rules.
    --font-poppins is created by next/font on this same element, so the font tokens live here. */
 :where(.site-root) {

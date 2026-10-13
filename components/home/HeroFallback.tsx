@@ -34,7 +34,7 @@ export default function HeroFallback() {
             personal.
           </p>
           <div className={styles.ctas}>
-            <Button href="/#journey-finder">Plan Your Journey</Button>
+            <Button href="/custom-holidays">Customize Your Holiday</Button>
             <Button href="/#destinations" variant="secondary">
               Explore Destinations
             </Button>

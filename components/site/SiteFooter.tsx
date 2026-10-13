@@ -39,7 +39,7 @@ export default async function SiteFooter() {
 
           <Column title="Journeys">
             <FLink href="/packages">All journeys</FLink>
-            <FLink href="/customized-holidays">Plan a journey</FLink>
+            <FLink href="/customize-holiday">Plan a journey</FLink>
           </Column>
 
           <Column title="Explore">
@@ -51,7 +51,7 @@ export default async function SiteFooter() {
 
           <Column title="About">
             {pages.has("about-us") && <FLink href="/about-us">Our story</FLink>}
-            <FLink href="/contact-us">Contact</FLink>
+            <FLink href="/contact">Contact</FLink>
           </Column>
 
           <Column title="Contact">

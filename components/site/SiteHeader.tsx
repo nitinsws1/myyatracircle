@@ -12,7 +12,7 @@ export type NavItem = { label: string; href: string; children?: { label: string;
 export default function SiteHeader({ siteName, logo, items }: { siteName: string; logo: string; items: NavItem[] }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);  
   const [open, setOpen] = useState<string | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -52,7 +52,7 @@ export default function SiteHeader({ siteName, logo, items }: { siteName: string
         <nav aria-label="Main" className="hidden lg:block">
           <ul className="flex items-center gap-8">
             {items.map((item) => (
-              <li key={item.label} className="relative"
+              <li key={item.label} className="group relative"
                 onMouseEnter={() => item.children && hoverIn(item.label)} onMouseLeave={() => item.children && hoverOut()}>
                 <div className="flex items-center gap-1">
                   <Link href={item.href}
@@ -68,8 +68,10 @@ export default function SiteHeader({ siteName, logo, items }: { siteName: string
                   )}
                 </div>
 
-                {item.children && open === item.label && (
-                  <div className="absolute left-1/2 top-full z-10 -translate-x-1/2 pt-4">
+                {item.children && (
+                  <div className={`absolute left-1/2 top-full z-10 -translate-x-1/2 pt-4 ${
+                    open === item.label ? "block" : "hidden group-hover:block group-focus-within:block"
+                  }`}>
                     <ul className="min-w-[250px] border border-line bg-white py-1 text-ink shadow-xl">
                       {item.children.map((c) => (
                         <li key={c.href + c.label} className="border-b border-line last:border-0">
@@ -87,7 +89,7 @@ export default function SiteHeader({ siteName, logo, items }: { siteName: string
         <div className="flex items-center gap-3">
           <Link href="/customized-holidays"
             className="hidden items-center gap-2 border border-gold bg-gold px-6 py-3.5 text-[13px] font-semibold uppercase tracking-[0.1em] text-navy transition-colors hover:border-gold-dark hover:bg-gold-dark hover:text-white lg:inline-flex">
-            Plan your journey <span aria-hidden>→</span>
+           Custom holidays<span aria-hidden>→</span>
           </Link>
           <button type="button" className="p-2 text-white lg:hidden" aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen} onClick={() => setMobileOpen((v) => !v)}>

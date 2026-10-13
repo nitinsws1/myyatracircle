@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Plus, Pencil } from "lucide-react";
 import { prisma } from "@/lib/prisma";
+import { Status } from "@/app/generated/prisma/client";
 import { cardImage } from "@/lib/media";
 import DeleteButton from "@/components/admin/DeleteButton";
 import ListFilters from "@/components/admin/ListFilters";
@@ -14,7 +15,8 @@ type SP = { q?: string; status?: string; destination?: string; page?: string };
 export default async function PackagesPage({ searchParams }: { searchParams: Promise<SP> }) {
   const sp = await searchParams;
   const q = sp.q?.trim() || undefined;
-  const status = sp.status === "PUBLISHED" || sp.status === "DRAFT" ? sp.status : undefined;
+  const statusVal: Status | undefined =
+    sp.status === "PUBLISHED" || sp.status === "DRAFT" ? (sp.status as Status) : undefined;
   const destId = Number(sp.destination) || undefined;
   const page = Math.max(1, Number(sp.page) || 1);
 
@@ -24,7 +26,7 @@ export default async function PackagesPage({ searchParams }: { searchParams: Pro
       { slug: { contains: q, mode: insensitive } },
       { shortDescription: { contains: q, mode: insensitive } },
     ] } : {}),
-    ...(status ? { status } : {}),
+    ...(statusVal ? { status: statusVal } : {}),
     ...(destId ? { destinations: { some: { destinationId: destId } } } : {}),
   };
 
@@ -44,7 +46,7 @@ export default async function PackagesPage({ searchParams }: { searchParams: Pro
   const hrefFor = (p: number) => {
     const params = new URLSearchParams();
     if (q) params.set("q", q);
-    if (status) params.set("status", status);
+    if (statusVal) params.set("status", statusVal);
     if (destId) params.set("destination", String(destId));
     params.set("page", String(p));
     return `/admin/packages?${params}`;
@@ -65,7 +67,7 @@ export default async function PackagesPage({ searchParams }: { searchParams: Pro
 
       <ListFilters action="/admin/packages" q={q} total={total} placeholder="Search name, slug or description"
         selects={[
-          { name: "status", value: status, allLabel: "All statuses", options: [{ value: "PUBLISHED", label: "Published" }, { value: "DRAFT", label: "Draft" }] },
+          { name: "status", value: statusVal, allLabel: "All statuses", options: [{ value: "PUBLISHED", label: "Published" }, { value: "DRAFT", label: "Draft" }] },
           { name: "destination", value: destId ? String(destId) : undefined, allLabel: "All destinations",
             options: destinations.map((d) => ({ value: String(d.id), label: d.name })) },
         ]} />
@@ -124,7 +126,7 @@ export default async function PackagesPage({ searchParams }: { searchParams: Pro
             })}
             {packages.length === 0 && (
               <tr><td colSpan={6} className="px-4 py-12 text-center text-slate-400">
-                {q || status || destId ? "No packages match your search." : 'No packages yet. Click "New package" to add the first one.'}
+                {q || statusVal || destId ? "No packages match your search." : 'No packages yet. Click "New package" to add the first one.'}
               </td></tr>
             )}
           </tbody>

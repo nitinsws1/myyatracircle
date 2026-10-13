@@ -1,13 +1,12 @@
 "use client";
 
-import { useId, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
 import SectionLabel from "@/components/ui/SectionLabel";
 import SectionHeading from "@/components/ui/SectionHeading";
-import { Button, ActionButton } from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 import type { Blog } from "@/lib/data";
 import styles from "./FeaturedBlogs.module.css";
 
@@ -21,13 +20,6 @@ export default function FeaturedBlogsClient({
   subheading?: string | null;
 }) {
   const [featured, ...rest] = blogs;
-  const emailId = useId();
-  const [status, setStatus] = useState<"idle" | "submitted">("idle");
-
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setStatus("submitted");
-  }
 
   return (
     <section aria-labelledby="journal-heading" className={styles.section} id="journal">
@@ -114,26 +106,17 @@ export default function FeaturedBlogsClient({
         </motion.div>
       </Container>
 
-      <Container width="editorial" className={styles.newsletterWrap}>
-        <form className={styles.newsletter} onSubmit={handleSubmit}>
+      {/* <Container width="editorial" className={styles.newsletterWrap}>
+        <div className={styles.newsletter}>
           <div className={styles.newsletterCopy}>
             <p className={styles.newsletterTitle}>Stay in the Circle</p>
             <p className={styles.newsletterDesc}>Occasional journeys, destination notes and ideas worth travelling for.</p>
           </div>
           <div className={styles.newsletterForm}>
-            <label className="visually-hidden" htmlFor={emailId}>
-              Email address
-            </label>
-            <input className={styles.emailInput} id={emailId} placeholder="Your email address" required type="email" />
-            <ActionButton type="submit" variant="tertiary" className={styles.newsletterSubmit}>
-              Join the Circle
-            </ActionButton>
+            <NewsletterForm variant="editorial" placeholder="Your email address" buttonText="Join the Circle" />
           </div>
-          <p aria-live="polite" className={styles.confirmation} role="status">
-            {status === "submitted" ? "Thank you — you're in the circle." : ""}
-          </p>
-        </form>
-      </Container>
+        </div>
+      </Container> */}
     </section>
   );
 }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Lock, Pencil, Plus, Sparkles } from "lucide-react";
+import { ExternalLink, Lock, Pencil, Plus, Sparkles } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { PAGE_SECTIONS, SYSTEM_PAGES, isSystemSlug } from "@/lib/cms-config";
 import { fmtDateTime } from "@/lib/inquiry-config";
@@ -61,13 +61,18 @@ export default async function PagesPage() {
           <tbody className="divide-y divide-slate-100">
             {pages.map((p) => {
               const system = isSystemSlug(p.slug);
-              const total = PAGE_SECTIONS[p.slug]?.length ?? 0;
-              const empty = !p.content && p._count.sections === 0;
+              const secCount = p._count.sections;
+              const hasContent = Boolean(p.content && p.content.trim() !== "");
+              const empty = !hasContent && secCount === 0;
+              const publicUrl = p.slug === "about-us" ? "/about" : `/${p.slug}`;
+
               return (
                 <tr key={p.id} className="hover:bg-slate-50">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <p className="font-medium text-slate-900">{p.title}</p>
+                      <Link href={`/admin/pages/${p.slug}`} className="font-medium text-slate-900 hover:text-teal-700">
+                        {p.title}
+                      </Link>
                       {system && (
                         <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[11px] text-slate-500">
                           <Lock size={10} /> Default
@@ -78,11 +83,14 @@ export default async function PagesPage() {
                   </td>
                   <td className="px-4 py-3 text-slate-600">
                     {empty ? (
-                      <span className="text-amber-600">Empty</span>
-                    ) : total > 0 ? (
-                      `${p._count.sections} of ${total} sections`
+                      <span className="text-amber-600 font-medium">Empty</span>
+                    ) : secCount > 0 ? (
+                      <span>
+                        {secCount} section{secCount === 1 ? "" : "s"}
+                        {hasContent && " + Intro"}
+                      </span>
                     ) : (
-                      "Written"
+                      <span className="text-emerald-700 font-medium">Content written</span>
                     )}
                   </td>
                   <td className="whitespace-nowrap px-4 py-3 text-slate-600">{fmtDateTime(p.updatedAt)}</td>
@@ -91,8 +99,22 @@ export default async function PagesPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-1">
-                      <Link href={`/admin/pages/${p.id}`}
-                        className="rounded-md p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-900" title="Edit">
+                      {p.isActive && (
+                        <Link
+                          href={publicUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="rounded-md p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                          title="View on public site"
+                        >
+                          <ExternalLink size={16} />
+                        </Link>
+                      )}
+                      <Link
+                        href={`/admin/pages/${p.slug}`}
+                        className="rounded-md p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                        title="Edit"
+                      >
                         <Pencil size={16} />
                       </Link>
                       {!system && <DeleteButton action={deletePage.bind(null, p.id)} message={`Delete the page "${p.title}"?`} />}

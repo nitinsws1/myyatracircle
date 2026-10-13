@@ -30,11 +30,7 @@ type HeaderClientProps = {
   siteName: string;
 };
 
-const ABOUT_LINKS = [
-  { label: "Our Story", href: "/about" },
-  { label: "Why MYC", href: "/#why-myc" },
-  { label: "Contact", href: "/#contact" },
-];
+
 
 type DropdownKey = "destinations" | "packages" | "about" | null;
 
@@ -86,14 +82,20 @@ export default function HeaderClient({ destinations, packages, logo, siteName }:
     };
   }, [mobileOpen]);
 
-  function toggleDropdown(key: Exclude<DropdownKey, null>) {
-    setOpenDropdown((prev) => (prev === key ? null : key));
-  }
-
   return (
-    <header ref={headerRef} className={`${styles.header} ${solid ? styles.solid : ""}`}>
+    <header
+      ref={headerRef}
+      className={`${styles.header} ${solid ? styles.solid : ""}`}
+      onMouseLeave={() => setOpenDropdown(null)}
+    >
       <div className={styles.inner}>
-        <Link aria-label={`${displayName} — home`} className={styles.brand} href="/">
+        <Link
+          aria-label={`${displayName} — home`}
+          className={styles.brand}
+          href="/"
+          onFocus={() => setOpenDropdown(null)}
+          onMouseEnter={() => setOpenDropdown(null)}
+        >
           <Image
             alt=""
             aria-hidden="true"
@@ -106,56 +108,57 @@ export default function HeaderClient({ destinations, packages, logo, siteName }:
         </Link>
 
         <nav aria-label="Primary" className={styles.desktopNav}>
-          <div className={styles.navItem}>
+          <div
+            className={styles.navItem}
+            onFocus={() => setOpenDropdown("destinations")}
+            onMouseEnter={() => setOpenDropdown("destinations")}
+          >
             <button
               aria-controls="nav-overlay"
               aria-expanded={openDropdown === "destinations"}
               aria-haspopup="true"
               className={`${styles.navlinkDrop} ${openDropdown === "destinations" ? styles.navlinkDropActive : ""}`}
               type="button"
-              onClick={() => toggleDropdown("destinations")}
+              onClick={() => setOpenDropdown("destinations")}
             >
               Destinations
               <ChevronIcon open={openDropdown === "destinations"} />
             </button>
           </div>
-          <div className={styles.navItem}>
+          <div
+            className={styles.navItem}
+            onFocus={() => setOpenDropdown("packages")}
+            onMouseEnter={() => setOpenDropdown("packages")}
+          >
             <button
               aria-controls="nav-overlay"
               aria-expanded={openDropdown === "packages"}
               aria-haspopup="true"
               className={`${styles.navlinkDrop} ${openDropdown === "packages" ? styles.navlinkDropActive : ""}`}
               type="button"
-              onClick={() => toggleDropdown("packages")}
+              onClick={() => setOpenDropdown("packages")}
             >
               Packages
               <ChevronIcon open={openDropdown === "packages"} />
             </button>
           </div>
-          <Link className={styles.navlink} href="/experiences">
+          <Link className={styles.navlink} href="/experiences" onFocus={() => setOpenDropdown(null)} onMouseEnter={() => setOpenDropdown(null)}>
             Experiences
           </Link>
-          <Link className={styles.navlink} href="/blogs">
+          <Link className={styles.navlink} href="/blogs" onFocus={() => setOpenDropdown(null)} onMouseEnter={() => setOpenDropdown(null)}>
             Blogs
           </Link>
-          <div className={styles.navItem}>
-            <button
-              aria-controls="nav-about-panel"
-              aria-expanded={openDropdown === "about"}
-              aria-haspopup="true"
-              className={`${styles.navlinkDrop} ${openDropdown === "about" ? styles.navlinkDropActive : ""}`}
-              type="button"
-              onClick={() => toggleDropdown("about")}
-            >
-              About
-              <ChevronIcon open={openDropdown === "about"} />
-            </button>
-          </div>
+          <Link className={styles.navlink} href="/about" onFocus={() => setOpenDropdown(null)} onMouseEnter={() => setOpenDropdown(null)}>
+            About us
+          </Link>
+          <Link className={styles.navlink} href="/contact" onFocus={() => setOpenDropdown(null)} onMouseEnter={() => setOpenDropdown(null)}>
+            contact
+          </Link>
         </nav>
 
-        <div className={styles.desktopCta}>
-          <Button href="/#journey-finder" sm>
-            Plan Your Journey
+        <div className={styles.desktopCta} onMouseEnter={() => setOpenDropdown(null)} onFocusCapture={() => setOpenDropdown(null)}>
+          <Button href="/customize-holiday" sm>
+            Customize Your Holiday
           </Button>
         </div>
 
@@ -268,7 +271,7 @@ export default function HeaderClient({ destinations, packages, logo, siteName }:
                         <p className={styles.overlayGroupLabel}>Packages</p>
                         <ul className={styles.overlayList}>
                           <li>
-                            <Link className={styles.overlayLink} href="/#journey-finder" onClick={() => setOpenDropdown(null)}>
+                            <Link className={styles.overlayLink} href="/packages" onClick={() => setOpenDropdown(null)}>
                               Featured Packages
                             </Link>
                           </li>
@@ -401,8 +404,8 @@ export default function HeaderClient({ destinations, packages, logo, siteName }:
                 </MobileAccordion>
               </nav>
               <div className={styles.mobileCta}>
-                <Button href="/#journey-finder" onClick={() => setMobileOpen(false)}>
-                  Plan Your Journey
+                <Button href="/customize-holiday" onClick={() => setMobileOpen(false)}>
+                  Customize Your Holiday
                 </Button>
               </div>
             </motion.div>

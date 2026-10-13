@@ -49,9 +49,28 @@ export default function HeroBannerForm({ action, initial }: {
   return (
     <form onSubmit={onSubmit} className="grid gap-6 lg:grid-cols-3">
       <div className="space-y-6 lg:col-span-2">
-        <Card title="Banner media" hint=" Videos play muted and loop.">
+        <Card title="Banner media" hint="Choose an uploaded image/video or use a YouTube link. Videos play muted and loop.">
           <input type="hidden" name="mode" value={mode} />
-          
+          <div role="tablist" aria-label="Banner media source" className="inline-flex rounded-lg bg-slate-100 p-1">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={mode === "library"}
+              onClick={() => setMode("library")}
+              className={tab(mode === "library")}
+            >
+              Upload image/video
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={mode === "youtube"}
+              onClick={() => setMode("youtube")}
+              className={tab(mode === "youtube")}
+            >
+              YouTube URL
+            </button>
+          </div>
 
           {mode === "library" ? (
             <ImageUpload name="mediaUrl" typeName="mediaType" label="Hero media" folder="general" allowVideo

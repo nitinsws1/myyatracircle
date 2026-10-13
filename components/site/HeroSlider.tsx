@@ -55,7 +55,7 @@ export default function HeroSlider({
   const cur = slides[active];
   const heading = cur?.heading ?? (count === 0 ? fallbackTitle : null);
   const hasText = !!(heading || cur?.subHeading || cur?.ctaText);
-  const primary = cur?.ctaText ? { text: cur.ctaText, href: cur.ctaUrl || "/customized-holidays" } : { text: "Plan your journey", href: "/customized-holidays" };
+  const primary = cur?.ctaText ? { text: cur.ctaText, href: cur.ctaUrl || "/customized-holidays" } : { text: "Customize Your Holiday", href: "/customized-holidays" };
 
   return (
     <section aria-roledescription="carousel" aria-label="Featured journeys"
@@ -84,9 +84,9 @@ export default function HeroSlider({
 
       {hasText && (
         <div key={active} className="relative z-10 mx-auto w-full max-w-[1200px] px-6 pb-24 pt-40 md:px-10 md:pb-32 xl:px-0 animate-fade-up">
-          {heading && eyebrow && <p className="mb-5 text-[13px] font-semibold uppercase tracking-[0.2em] text-gold">{eyebrow}</p>}
+          {heading && eyebrow && <p className="eyebrow mb-5 text-[13px] font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">{eyebrow}</p>}
           {heading && <h1 className="max-w-3xl text-[2.75rem] font-bold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl">{heading}</h1>}
-          {cur?.subHeading && <p className="mt-6 max-w-xl text-lg font-light leading-relaxed text-white/90 md:text-xl">{cur.subHeading}</p>}
+          {cur?.subHeading && <p className="  mt-6 max-w-xl text-lg font-light leading-relaxed text-white/90 md:text-xl">{cur.subHeading}</p>}
           <div className="mt-9 flex flex-wrap gap-4">
             {homeStyle ? (
               <>

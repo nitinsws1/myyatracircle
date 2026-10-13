@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { Blog } from "@/lib/data";
 import styles from "./BlogCard.module.css";
 
-type Variant = "default" | "hero" | "horizontal" | "text" | "row";
+type Variant = "default" | "hero" | "horizontal" | "text" | "row" | "catalog";
 
 const variantClass: Record<Variant, string> = {
   default: "",
@@ -11,6 +11,7 @@ const variantClass: Record<Variant, string> = {
   horizontal: styles.cardHorizontal,
   text: styles.cardText,
   row: styles.cardRow,
+  catalog: styles.cardCatalog,
 };
 
 type Props = {
@@ -48,6 +49,7 @@ export default function BlogCard({ blog, variant = "default", className, sizes }
         <p className={styles.eyebrow}>
           <span className={styles.category}>{blog.category}</span>
           {blog.destination && <span className={styles.destination}>{blog.destination}</span>}
+          {variant === "catalog" && blog.date && <span className={styles.catalogDate}>{blog.date}</span>}
         </p>
         <h3 className={styles.title}>{blog.title}</h3>
         <p className={styles.summary}>{blog.summary}</p>

@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { getActivePages, getDestinations, getPackages, getSiteSettings, getSocialLinks } from "@/lib/site-data";
 import { platformLabel } from "@/lib/settings-config";
+import NewsletterForm from "@/components/site/NewsletterForm";
 import styles from "./Footer.module.css";
 
 const ABOUT_LINKS = [
   { label: "Our Story", href: "/about" },
-  { label: "Why MYC", href: "/#why-myc" },
-  { label: "Contact", href: "/#contact" },
+  
+  { label: "Contact", href: "/contact" },
 ];
 
 const EXPLORE_LINKS = [
@@ -55,6 +56,18 @@ export default async function Footer() {
       <p className={styles.brandLine}>
         {settings.footerText || "My Yatra Circle — Curated journeys. Thoughtfully made."}
       </p>
+
+      <div className={styles.newsletterBar}>
+        <div className={styles.newsletterText}>
+          <h3 className={styles.newsletterHeading}>Stay in the Circle</h3>
+          <p className={styles.newsletterSub}>
+            Join our community for seasonal dispatches, cultural notes, and early invitations to curated journeys.
+          </p>
+        </div>
+        <div className={styles.newsletterFormWrap}>
+          <NewsletterForm variant="dark" placeholder="Enter your email address" buttonText="Subscribe" />
+        </div>
+      </div>
 
       <div className={styles.top}>
         <div className={styles.linkGrid}>

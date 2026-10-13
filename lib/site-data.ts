@@ -58,6 +58,105 @@ export const getDestinations = cache(async () => {
   }));
 });
 
+export const getDestinationBySlug = cache((slug: string) =>
+  prisma.destination.findFirst({
+    where: { slug, status: "PUBLISHED" },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      region: true,
+      state: true,
+      shortDescription: true,
+      overview: true,
+      bannerImage: true,
+      bannerType: true,
+      thumbnailImage: true,
+      metaTitle: true,
+      metaDescription: true,
+      metaKeywords: true,
+      gallery: {
+        orderBy: [{ sortOrder: "asc" }, { id: "asc" }],
+        select: { id: true, url: true, type: true },
+      },
+      places: {
+        where: { status: "PUBLISHED" },
+        orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          about: true,
+          heroImage: true,
+          heroType: true,
+          thumbnailImage: true,
+          gallery: {
+            orderBy: [{ sortOrder: "asc" }, { id: "asc" }],
+            select: { id: true, url: true, type: true },
+          },
+        },
+      },
+      // Card-level data only: the itinerary / inclusions belong on the package detail page.
+      packages: {
+        where: { package: { status: "PUBLISHED" } },
+        select: {
+          package: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+              isFeatured: true,
+              sortOrder: true,
+              durationDays: true,
+              durationNights: true,
+              shortDescription: true,
+              heroImage: true,
+              heroType: true,
+              thumbnailImage: true,
+              highlights: {
+                orderBy: [{ sortOrder: "asc" }, { id: "asc" }],
+                take: 3,
+                select: { id: true, text: true },
+              },
+              gallery: {
+                orderBy: [{ sortOrder: "asc" }, { id: "asc" }],
+                select: { id: true, url: true, type: true },
+              },
+            },
+          },
+        },
+      },
+      experiences: {
+        where: { experience: { status: "PUBLISHED" } },
+        select: {
+          experience: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+              sortOrder: true,
+              shortDescription: true,
+              overview: true,
+              heroImage: true,
+              heroType: true,
+              thumbnailImage: true,
+              highlights: {
+                orderBy: [{ sortOrder: "asc" }, { id: "asc" }],
+                take: 3,
+                select: { id: true, text: true },
+              },
+              gallery: {
+                orderBy: [{ sortOrder: "asc" }, { id: "asc" }],
+                select: { id: true, url: true, type: true },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+);
+
 export const getHomepageDestinations = cache(async () => {
   const rows = await prisma.destination.findMany({
     where: { status: "PUBLISHED", isFeatured: true },
@@ -112,7 +211,13 @@ export const getFeaturedTestimonials = cache(() =>
       where: { isApproved: true, isFeatured: true },
       orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
       take: 6,
-      select: { id: true, travelerName: true, location: true, feedback: true },
+      select: { 
+        id: true, 
+        travelerName: true, 
+        location: true, 
+        feedback: true,
+        imageUrl: true // Added imageUrl here
+      },
     })
     .then((rows) =>
       rows.map((testimonial) => ({
@@ -120,6 +225,7 @@ export const getFeaturedTestimonials = cache(() =>
         travelerName: stripHtml(testimonial.travelerName),
         location: testimonial.location ? stripHtml(testimonial.location) : null,
         feedbackHtml: cleanHtml(testimonial.feedback),
+        imageUrl: testimonial.imageUrl // Passed it to the frontend
       })),
     )
 );
@@ -291,6 +397,21 @@ export const getAboutPage = cache(async () => {
   };
 });
 
+export const getAboutTeamMembers = cache(async () => {
+  const members = await prisma.teamMember.findMany({
+    where: { isActive: true },
+    orderBy: [{ sortOrder: "asc" }, { id: "asc" }],
+    select: { name: true, designation: true, bio: true, photoUrl: true },
+  });
+
+  return members.map((member) => ({
+    name: stripHtml(member.name),
+    designation: member.designation ? stripHtml(member.designation) : null,
+    bio: member.bio ? stripHtml(member.bio) : null,
+    photoUrl: member.photoUrl,
+  }));
+});
+
 // ───────── Tour packages (homepage explorer, package cards) ─────────
 export type PackageItem = {
   id: number;
@@ -364,4 +485,266 @@ export const getHomepagePackages = cache(async (): Promise<HomePackage[]> => {
       image: item.image,
       alt: item.title,
     }));
+});
+
+// ───────── Package detail ─────────
+export const getPackageBySlug = cache(async (slug: string) => {
+  const row = await prisma.tourPackage.findUnique({
+    where: { slug, status: "PUBLISHED" },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      durationDays: true,
+      durationNights: true,
+      shortDescription: true,
+      overview: true,
+      heroImage: true,
+      heroType: true,
+      thumbnailImage: true,
+      isFeatured: true,
+      metaTitle: true,
+      metaDescription: true,
+      metaKeywords: true,
+      destinations: {
+        select: { destination: { select: { name: true, slug: true, region: true } } },
+      },
+      itinerary: { orderBy: { dayNumber: "asc" }, select: { id: true, dayNumber: true, title: true, description: true } },
+      highlights: { orderBy: [{ sortOrder: "asc" }, { id: "asc" }], select: { id: true, text: true } },
+      inclusions: {
+        orderBy: [{ sortOrder: "asc" }, { id: "asc" }],
+        select: { id: true, kind: true, text: true },
+      },
+      gallery: { orderBy: [{ sortOrder: "asc" }, { id: "asc" }], select: { id: true, url: true, type: true } },
+    },
+  });
+  return row;
+});
+
+// ───────── Page settings (SiteSetting rows named "page.<page>.<field>") ─────────
+// Example: page.experiences.title, page.experiences.subtitle, page.experiences.metaTitle ...
+// Returns a plain object like { title, subtitle, banner, bannerType, metaTitle, metaDescription, metaKeywords }.
+// Empty / NULL values come back as null so the page can fall back to its defaults.
+export type PageSettings = {
+  title: string | null;
+  subtitle: string | null;
+  banner: string | null;
+  bannerType: string | null;
+  metaTitle: string | null;
+  metaDescription: string | null;
+  metaKeywords: string | null;
+};
+
+export const getPageSettings = cache(async (page: string): Promise<PageSettings> => {
+  const prefix = `page.${page}.`;
+  const rows = await prisma.siteSetting.findMany({
+    where: { key: { startsWith: prefix } },
+    select: { key: true, value: true },
+  });
+
+  const get = (field: string) => rows.find((r) => r.key === prefix + field)?.value?.trim() || null;
+
+  return {
+    title: get("title"),
+    subtitle: get("subtitle"),
+    banner: get("banner"),
+    bannerType: get("bannerType"),
+    metaTitle: get("metaTitle"),
+    metaDescription: get("metaDescription"),
+    metaKeywords: get("metaKeywords"),
+  };
+});
+
+// ───────── Experiences (listing) ─────────
+export const getExperiences = cache(async () => {
+  const rows = await prisma.experience.findMany({
+    where: { status: "PUBLISHED" },
+    orderBy: [{ isFeatured: "desc" }, { featuredOrder: "asc" }, { sortOrder: "asc" }, { id: "asc" }],
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      shortDescription: true,
+      overview: true,
+      thumbnailImage: true,
+      heroImage: true,
+      heroType: true,
+      destinations: {
+        where: { destination: { status: "PUBLISHED" } },
+        select: { destination: { select: { name: true } } },
+      },
+    },
+  });
+
+  return rows.map((e) => ({
+    id: e.id,
+    slug: e.slug,
+    name: stripHtml(e.name),
+    image: e.thumbnailImage ?? (e.heroType === "IMAGE" ? e.heroImage : null),
+    eyebrow: e.destinations.map((d) => stripHtml(d.destination.name)).join(" · ") || "Experience",
+    summary: stripHtml(e.shortDescription ?? e.overview ?? ""),
+  }));
+});
+
+// ───────── Experience detail ─────────
+export const getExperienceBySlug = cache(async (slug: string) => {
+  const row = await prisma.experience.findUnique({
+    where: { slug, status: "PUBLISHED" },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      shortDescription: true,
+      overview: true,
+      heroImage: true,
+      heroType: true,
+      thumbnailImage: true,
+      metaTitle: true,
+      metaDescription: true,
+      metaKeywords: true,
+      highlights: { orderBy: [{ sortOrder: "asc" }, { id: "asc" }], select: { id: true, text: true } },
+      gallery: { orderBy: [{ sortOrder: "asc" }, { id: "asc" }], select: { id: true, url: true, type: true } },
+      destinations: {
+        where: { destination: { status: "PUBLISHED" } },
+        select: { destination: { select: { name: true, slug: true } } },
+      },
+    },
+  });
+  if (!row) return null;
+  return {
+    ...row,
+    name: stripHtml(row.name),
+    overviewHtml: cleanHtml(row.overview),
+    summary: stripHtml(row.shortDescription ?? row.overview ?? ""),
+    destinationNames: row.destinations.map((d) => stripHtml(d.destination.name)),
+  };
+});
+
+// ───────── Blog listing ─────────
+export const getAllBlogs = cache(async () => {
+  const now = new Date();
+  const rows = await prisma.blog.findMany({
+    where: {
+      status: "PUBLISHED",
+      OR: [{ publishedAt: null }, { publishedAt: { lte: now } }],
+    },
+    orderBy: [{ publishedAt: { sort: "desc", nulls: "last" } }, { updatedAt: "desc" }],
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      shortDescription: true,
+      featuredImage: true,
+      publishedAt: true,
+      authorName: true,
+      category: { select: { name: true } },
+    },
+  });
+
+  return rows.map((b) => ({
+    id: b.id,
+    slug: b.slug,
+    title: stripHtml(b.title),
+    category: b.category ? stripHtml(b.category.name) : "Journal",
+    date: b.publishedAt ? fmtBlogDate(b.publishedAt) : "",
+    summary: stripHtml(b.shortDescription ?? ""),
+    image: b.featuredImage,
+    alt: stripHtml(b.title),
+  }));
+});
+
+// ───────── Blog detail ─────────
+export const getBlogBySlug = cache(async (slug: string) => {
+  const now = new Date();
+  const row = await prisma.blog.findUnique({
+    where: { slug },
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      authorName: true,
+      shortDescription: true,
+      content: true,
+      featuredImage: true,
+      publishedAt: true,
+      status: true,
+      metaTitle: true,
+      metaDescription: true,
+      metaKeywords: true,
+      category: { select: { name: true, slug: true } },
+      tags: { select: { id: true, name: true, slug: true } },
+    },
+  });
+
+  if (!row || row.status !== "PUBLISHED") return null;
+  if (row.publishedAt && row.publishedAt > now) return null; // scheduled
+
+  return {
+    ...row,
+    title: stripHtml(row.title),
+    category: row.category ? stripHtml(row.category.name) : "Journal",
+    date: row.publishedAt ? fmtBlogDate(row.publishedAt) : "",
+    summary: stripHtml(row.shortDescription ?? ""),
+    contentHtml: cleanHtml(row.content),
+  };
+});
+
+// ───────── FAQs ─────────
+export const getFaqs = cache(() =>
+  prisma.faq.findMany({
+    where: { isActive: true },
+    orderBy: [{ sortOrder: "asc" }, { id: "asc" }],
+    select: { id: true, question: true, answer: true },
+  }),
+);
+
+// ───────── All testimonials (public testimonials page) ─────────
+export const getAllTestimonials = cache(() =>
+  prisma.testimonial
+    .findMany({
+      where: { isApproved: true },
+      orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
+      select: { id: true, travelerName: true, location: true, feedback: true, imageUrl: true },
+    })
+    .then((rows) =>
+      rows.map((t) => ({
+        id: t.id,
+        travelerName: stripHtml(t.travelerName),
+        location: t.location ? stripHtml(t.location) : null,
+        feedbackHtml: cleanHtml(t.feedback),
+        imageUrl: t.imageUrl ?? null,
+      })),
+    ),
+);
+
+// ───────── CMS page by slug (privacy, terms, etc.) ─────────
+export const getPageBySlug = cache(async (slug: string) => {
+  const row = await prisma.page.findUnique({
+    where: { slug, isActive: true },
+    select: {
+      id: true,
+      slug: true,
+      title: true,
+      content: true,
+      metaTitle: true,
+      metaDescription: true,
+      updatedAt: true,
+      sections: {
+        orderBy: [{ sortOrder: "asc" }, { id: "asc" }],
+        select: { id: true, sectionKey: true, title: true, content: true, imageUrl: true },
+      },
+    },
+  });
+  if (!row) return null;
+  return {
+    ...row,
+    contentHtml: cleanHtml(row.content),
+    sections: row.sections.map((s) => ({
+      id: s.id,
+      key: s.sectionKey,
+      title: s.title ? stripHtml(s.title) : null,
+      contentHtml: cleanHtml(s.content),
+      imageUrl: s.imageUrl,
+    })),
+  };
 });

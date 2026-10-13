@@ -36,8 +36,8 @@ export default function FinalCTA() {
         </h2>
         <p className={styles.sub}>Let&rsquo;s start with a conversation, not a checkout page.</p>
         <div className={styles.ctas}>
-          <Button href="/#journey-finder">Plan Your Journey</Button>
-          <Button href="/#contact" variant="secondary">
+          <Button href="/customize-holiday">Plan Your Journey</Button>
+          <Button href="/contact" variant="secondary">
             Talk to an Expert
           </Button>
         </div>

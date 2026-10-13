@@ -1,16 +1,10 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+
+
 
 /* @media (prefers-color-scheme: dark) {
   :root {
@@ -25,7 +19,6 @@
   font-family: Arial, Helvetica, sans-serif;
 } */
 
-
 /*    Used by the admin editor now, and by the public website later (wrap the saved HTML in className="rich-content"). */
 /* .rich-content h2 { font-size: 1.5rem; font-weight: 700; margin: 1.25em 0 0.5em; }
 .rich-content h3 { font-size: 1.25rem; font-weight: 600; margin: 1.1em 0 0.4em; }
@@ -38,11 +31,6 @@
 .rich-content a { color: #0f766e; text-decoration: underline; }
 .rich-content hr { margin: 1.5em 0; border-color: #e2e8f0; }
 .rich-content > :first-child { margin-top: 0; } */
-
-
-
-
-
 
 /* Paste at the END of app/globals.css.
    The :root tokens are the palette from the handoff document (source of truth).
@@ -57,8 +45,39 @@
   --white: #ffffff;
   --ink: #202633;
   --grey: #687080;
-  --border: #e7e1d4;
+  --border: oklch(0.922 0 0);
   --footer-bg: #050f24;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
 }
 /* 
 @theme inline {
@@ -73,3 +92,6 @@
   --color-line: var(--border);
   --color-footer: var(--footer-bg);
 } */
+
+
+

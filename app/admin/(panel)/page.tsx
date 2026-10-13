@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { ArrowRight, BookOpen, CalendarClock, Compass, MapPin, MessageCircle, Package, Sparkles } from "lucide-react";
 import DashboardAnalytics from "@/components/admin/DashboardAnalytics";
+import DashboardNotifications from "@/components/admin/DashboardNotifications";
 
 
 export default async function Dashboard() {
@@ -25,6 +26,11 @@ export default async function Dashboard() {
     recentContactInquiries,
     recentTourInquiries,
     recentHolidayInquiries,
+    newContactNotifications,
+    newTourNotifications,
+    newHolidayNotifications,
+    pendingTestimonialsCount,
+    pendingTestimonials,
     // --- Data Analytics Aggregation Queries ---
     contactInterests,
     holidayInterests,
@@ -62,6 +68,31 @@ export default async function Dashboard() {
       orderBy: { createdAt: "desc" },
       take: 6,
       select: { id: true, name: true, preferredDestination: true, status: true, createdAt: true },
+    }),
+    prisma.contactInquiry.findMany({
+      where: { status: "NEW" },
+      orderBy: { createdAt: "desc" },
+      take: 6,
+      select: { id: true, name: true, destinationOfInterest: true, createdAt: true },
+    }),
+    prisma.tourInquiry.findMany({
+      where: { status: "NEW" },
+      orderBy: { createdAt: "desc" },
+      take: 6,
+      include: { package: { select: { name: true } } },
+    }),
+    prisma.holidayInquiry.findMany({
+      where: { status: "NEW" },
+      orderBy: { createdAt: "desc" },
+      take: 6,
+      select: { id: true, name: true, preferredDestination: true, createdAt: true },
+    }),
+    prisma.testimonial.count({ where: { isApproved: false } }),
+    prisma.testimonial.findMany({
+      where: { isApproved: false },
+      orderBy: { createdAt: "desc" },
+      take: 6,
+      select: { id: true, travelerName: true, createdAt: true },
     }),
     // Fetch analytics data
     prisma.contactInquiry.groupBy({
@@ -142,6 +173,42 @@ export default async function Dashboard() {
   ]
     .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
     .slice(0, 6);
+  const notifications = [
+    ...newContactNotifications.map((inquiry) => ({
+      id: `contact-${inquiry.id}`,
+      title: `New contact inquiry from ${inquiry.name}`,
+      detail: inquiry.destinationOfInterest || "General inquiry",
+      createdAt: inquiry.createdAt.toISOString(),
+      href: `/admin/inquiries/contact/${inquiry.id}`,
+      kind: "inquiry" as const,
+    })),
+    ...newTourNotifications.map((inquiry) => ({
+      id: `tour-${inquiry.id}`,
+      title: `New tour inquiry from ${inquiry.name}`,
+      detail: inquiry.package?.name || "Tour package inquiry",
+      createdAt: inquiry.createdAt.toISOString(),
+      href: `/admin/inquiries/tour/${inquiry.id}`,
+      kind: "inquiry" as const,
+    })),
+    ...newHolidayNotifications.map((inquiry) => ({
+      id: `holiday-${inquiry.id}`,
+      title: `New holiday inquiry from ${inquiry.name}`,
+      detail: inquiry.preferredDestination || "Destination not specified",
+      createdAt: inquiry.createdAt.toISOString(),
+      href: `/admin/inquiries/holiday/${inquiry.id}`,
+      kind: "inquiry" as const,
+    })),
+    ...pendingTestimonials.map((testimonial) => ({
+      id: `testimonial-${testimonial.id}`,
+      title: `New testimonial from ${testimonial.travelerName}`,
+      detail: "Pending approval",
+      createdAt: testimonial.createdAt.toISOString(),
+      href: `/admin/testimonials/${testimonial.id}`,
+      kind: "testimonial" as const,
+    })),
+  ]
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    .slice(0, 8);
   const overviewCards = [
     {
       label: "New inquiries",
@@ -197,6 +264,11 @@ export default async function Dashboard() {
         </div>
         <p className="text-sm text-slate-500">{fmtDate(now)}</p>
       </header>
+
+      <DashboardNotifications
+        count={newInquiryCount + pendingTestimonialsCount}
+        notifications={notifications}
+      />
 
       <section aria-label="Business overview">
         <div className="mb-3 flex items-center justify-between">

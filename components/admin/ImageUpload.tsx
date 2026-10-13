@@ -15,10 +15,11 @@ type Props = {
   allowVideo?: boolean; // true for hero/banner
   typeName?: string; // extra form field that says IMAGE or VIDEO, e.g. "bannerType"
   defaultType?: "IMAGE" | "VIDEO" | null;
+  onChange?: (url: string) => void;
 };
 
 export default function ImageUpload({
-  name, label, folder, defaultValue, serverError, allowVideo = false, typeName, defaultType,
+  name, label, folder, defaultValue, serverError, allowVideo = false, typeName, defaultType, onChange,
 }: Props) {
   const [url, setUrl] = useState(defaultValue ?? "");
   const [type, setType] = useState<"IMAGE" | "VIDEO">(defaultType ?? "IMAGE");
@@ -38,6 +39,7 @@ export default function ImageUpload({
       const up = await uploadAndRegister(file, folder, isVideo ? "VIDEO" : "IMAGE");
       setUrl(up.url);
       setType(up.kind === "VIDEO" ? "VIDEO" : "IMAGE");
+      onChange?.(up.url);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
     } finally {
@@ -64,7 +66,7 @@ export default function ImageUpload({
             ) : (
               <img src={url} alt="" className="h-24 w-36 rounded-lg border border-slate-200 object-cover" />
             )}
-            <button type="button" onClick={() => { setUrl(""); setType("IMAGE"); }} title="Remove"
+            <button type="button" onClick={() => { setUrl(""); setType("IMAGE"); onChange?.(""); }} title="Remove"
               className="absolute -right-2 -top-2 rounded-full bg-white p-1 text-slate-500 shadow ring-1 ring-slate-200 hover:text-red-600">
               <X size={14} />
             </button>
@@ -97,7 +99,12 @@ export default function ImageUpload({
       {(error || serverError) && <p className="mt-1 text-xs text-red-600">{error || serverError}</p>}
 
       <MediaPicker open={pickerOpen} onClose={() => setPickerOpen(false)} kinds={pickerKinds}
-        onPick={(picked) => { setUrl(picked[0].url); setType(picked[0].kind === "VIDEO" ? "VIDEO" : "IMAGE"); setError(""); }} />
+        onPick={(picked) => {
+          setUrl(picked[0].url);
+          setType(picked[0].kind === "VIDEO" ? "VIDEO" : "IMAGE");
+          setError("");
+          onChange?.(picked[0].url);
+        }} />
     </div>
   );
 }

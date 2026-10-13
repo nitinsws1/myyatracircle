@@ -79,11 +79,11 @@ export default function WhyMYCClient({
             <p className={styles.paragraph}>
               {subheading?.trim() || "We believe the best journeys are not assembled from a list of places. They are shaped around the person taking them."}
             </p>
-            <p className={styles.paragraph}>
+            {/* <p className={styles.paragraph}>
               That means knowing when to slow down, what is worth making time for, and which details can turn a good
               trip into one you remember for years.
-            </p>
-            <p className={styles.statement}>Never templated. Always personal.</p>
+            </p> */}
+            {/* <p className={styles.statement}>Never templated. Always personal.</p> */}
             <div className={styles.imageWrap}>
               <Image
                 alt="Traveller pausing over coffee on a veranda overlooking the Alleppey backwaters, Kerala"

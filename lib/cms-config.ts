@@ -1,6 +1,8 @@
 // Pages the public website expects to exist. Their URL (slug) is fixed and they cannot be deleted.
 export const SYSTEM_PAGES = [
   { slug: "about-us", title: "About Us", note: "Story, vision, mission and expertise blocks" },
+  { slug: "why-travel-with-us", title: "Why Travel With Us", note: "Reasons to choose My Yatra Circle" },
+  { slug: "our-team", title: "Our Team", note: "The people behind My Yatra Circle" },
   { slug: "privacy-policy", title: "Privacy Policy", note: "Linked from the website footer" },
   { slug: "terms-and-conditions", title: "Terms & Conditions", note: "Linked from the website footer" },
   { slug: "cancellation-policy", title: "Cancellation Policy", note: "Linked from the website footer" },

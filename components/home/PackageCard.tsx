@@ -4,7 +4,7 @@ import type { Package } from "@/lib/data";
 import RingMotif from "@/components/ui/RingMotif";
 import styles from "./PackageCard.module.css";
 
-type Variant = "default" | "editorial" | "hero" | "compact";
+type Variant = "default" | "editorial" | "hero" | "compact" | "catalog";
 
 type PackageCardProps = {
   package: Package;
@@ -18,6 +18,7 @@ const variantClass: Record<Variant, string> = {
   editorial: styles.cardEditorial,
   hero: styles.cardHero,
   compact: styles.cardCompact,
+  catalog: styles.cardCatalog,
 };
 
 // The one package card used across the homepage's "Journeys worth taking"
@@ -45,7 +46,7 @@ export default function PackageCard({ package: pkg, variant = "default", showRin
         </div>
       </Link>
       <div className={styles.body}>
-        {variant === "hero" || variant === "compact" || variant === "default" ? (
+        {variant === "hero" || variant === "compact" || variant === "default" || variant === "catalog" ? (
           <p className={styles.typeTag}>{pkg.typeTag}</p>
         ) : null}
         <p className={isEditorial ? styles.metaEditorial : styles.eyebrow}>
